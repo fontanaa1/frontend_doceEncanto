@@ -1,0 +1,37 @@
+const CACHE_NAME = 'doceria-cache-v8';
+const ASSETS = [
+    './',
+    './index.html',
+    './aula12.html',
+    './manifest.json',
+    './assets/imgs/doceEncanto.png',
+    './assets/imgs/logopwa.png',
+    './assets/imgs/logopwa512.png',
+    './assets/imgs/Doceria.png',
+    './assets/imgs/whatsapp.png'
+];
+
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            console.log('Fazendo whey no cache!');
+            return cache.addAll(ASSETS);
+        })
+    );
+});
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
+});
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+            );
+        })
+    );
+});
