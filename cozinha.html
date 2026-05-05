@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doce Encanto - Painel de Pedidos</title>
+  <link href="https://fonts.cdnfonts.com/css/chellin" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#ea92a5', secondary: '#fb923c' },
+          fontFamily: { chellin: ['Chellin', 'cursive'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #fff7ed; }
+    @keyframes pulseRing { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .pulse-dot { animation: pulseRing 1.5s infinite; }
+    @keyframes slideIn { from { transform: translateY(-20px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+    .animate-slide { animation: slideIn .35s ease-out; }
+  </style>
+</head>
+<body class="text-gray-800">
+
+  <!-- BANNER LOJA FECHADA -->
+  <div id="closed-banner" class="hidden bg-rose-600 text-white text-center py-2 text-sm font-semibold">
+    🚫 Loja fechada — novos pedidos não estão sendo recebidos
+  </div>
+
+  <!-- HEADER -->
+  <header class="relative overflow-hidden bg-black">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary/80 via-rose-400/60 to-orange-300/70"></div>
+    <div class="relative z-10 max-w-6xl mx-auto px-6 py-6 flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-2xl shadow-lg">
+          <img  class="w-full h-full object-cover rounded-full" src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/doce_encantoo.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvZG9jZV9lbmNhbnRvby5wbmciLCJpYXQiOjE3Nzc5ODkxMTgsImV4cCI6MTgwOTUyNTExOH0.Zmb8rtc1ntMVVihFil3QvQeTTc1UPYKelGAkPVeGV20" alt="logo">
+        </div>
+        <div>
+          <h1 class="font-chellin text-3xl text-white drop-shadow">Doce Encanto</h1>
+          <p class="text-white/90 text-xs sm:text-sm">Painel de Pedidos</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div id="store-status" class="hidden sm:flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm border border-white/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
+          <span>Loja Aberta</span>
+        </div>
+        <button id="btn-toggle-store" onclick="toggleStore()" class="bg-white text-primary font-bold px-4 py-2 rounded-xl shadow hover:opacity-90 transition">
+          Fechar Loja
+        </button>
+        <button class="bg-white/20 text-white border border-white/30 font-bold px-3 py-2 rounded-xl hover:bg-white/30 transition" title="Sair">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <!-- STATS -->
+    <section id="stats" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8"></section>
+
+    <!-- BARRA DE BUSCA + AÇÕES -->
+    <div class="flex flex-col sm:flex-row gap-3 mb-4">
+      <div class="relative flex-1">
+        <input id="search" oninput="renderOrders()" type="text" placeholder="🔍 Buscar por cliente ou nº do pedido..."
+          class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+      </div>
+      <label class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm cursor-pointer hover:border-primary/50 transition">
+        <input id="sound-toggle" type="checkbox" checked class="accent-primary w-4 h-4">
+        <span class="font-semibold">🔔 Som de novos pedidos</span>
+      </label>
+      <button onclick="simulateNewOrder()" class="bg-secondary text-white font-bold px-4 py-3 rounded-xl shadow hover:opacity-90 transition text-sm">
+        + Simular pedido
+      </button>
+    </div>
+
+    <!-- TABS -->
+    <div id="tabs" class="flex gap-2 overflow-x-auto pb-3 mb-4 snap-x"></div>
+
+    <!-- ORDERS -->
+    <div id="orders" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+  </main>
+
+  <footer class="bg-primary text-white text-center py-4 mt-10 text-sm">
+    Doce Encanto — Painel de Pedidos 🧁
+  </footer>
+
+  <script>
+    // ============ ESTADO ============
+    let orders = [
+      { id: "#1042", cliente: "Mariana Silva", telefone: "(15) 99876-1234",
+        tipo: "delivery", endereco: "Rua das Flores, 250 - Centro",
+        pagamento: "Pix", hora: "14:32", status: "novo",
+        itens: [
+          { nome: "Donuts de Avelã", qtd: 2, preco: 12.9 },
+          { nome: "Cupcake de Oreo", qtd: 1, preco: 9.5 }
+        ],
+        observacao: "Sem cobertura extra, por favor 💕" },
+      { id: "#1041", cliente: "João Pereira", telefone: "(15) 99888-2211",
+        tipo: "retirada", pagamento: "Cartão na retirada", hora: "14:18", status: "preparo",
+        itens: [
+          { nome: "Bolo Floresta Negra (fatia)", qtd: 3, preco: 14.0 },
+          { nome: "Torta de Morango", qtd: 1, preco: 18.0 }
+        ] },
+      { id: "#1040", cliente: "Beatriz Andrade", telefone: "(15) 99700-1010",
+        tipo: "delivery", endereco: "Av. Brasil, 1200 - Apto 32",
+        pagamento: "Dinheiro - Troco p/ R$ 100", hora: "13:55", status: "pronto",
+        itens: [{ nome: "Donuts de Avelã", qtd: 6, preco: 12.9 }] },
+      { id: "#1039", cliente: "Carlos Eduardo", telefone: "(15) 99654-7777",
+        tipo: "retirada", pagamento: "Pix", hora: "13:30", status: "entregue",
+        itens: [{ nome: "Cupcake de Oreo", qtd: 4, preco: 9.5 }] }
+    ];
+
+    let storeOpen = true;
+    let nextId = 1043;
+
+    const statusConfig = {
+      novo:     { label: "Novo Pedido", chip: "bg-rose-100 text-rose-700 border-rose-300",       next: "preparo",  nextLabel: "Aceitar e Preparar" },
+      preparo:  { label: "Em Preparo",  chip: "bg-amber-100 text-amber-700 border-amber-300",    next: "pronto",   nextLabel: "Marcar como Pronto" },
+      pronto:   { label: "Pronto",      chip: "bg-emerald-100 text-emerald-700 border-emerald-300", next: "entregue", nextLabel: "Finalizar Pedido" },
+      entregue: { label: "Entregue",    chip: "bg-gray-100 text-gray-600 border-gray-300" }
+    };
+
+    const tabs = [
+      { key: "todos",    label: "Todos",      emoji: "📋" },
+      { key: "novo",     label: "Novos",      emoji: "🔔" },
+      { key: "preparo",  label: "Em Preparo", emoji: "👩‍🍳" },
+      { key: "pronto",   label: "Prontos",    emoji: "✅" },
+      { key: "entregue", label: "Entregues",  emoji: "📦" }
+    ];
+
+    let filter = "todos";
+
+    // ============ HELPERS ============
+    const total = (o) => o.itens.reduce((s, i) => s + i.qtd * i.preco, 0);
+    const fmt = (v) => v.toLocaleString("pt-br", { style: "currency", currency: "BRL" });
+    const counts = () => {
+      const c = { todos: orders.length };
+      orders.forEach(o => c[o.status] = (c[o.status] || 0) + 1);
+      return c;
+    };
+    const faturamento = () => orders.filter(o => o.status === "entregue").reduce((s, o) => s + total(o), 0);
+    const ticketMedio = () => {
+      const entregues = orders.filter(o => o.status === "entregue");
+      return entregues.length ? faturamento() / entregues.length : 0;
+    };
+
+    // Som via WebAudio (sem precisar de arquivo)
+    function playBeep() {
+      if (!document.getElementById("sound-toggle").checked) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = "sine"; o.frequency.value = 880;
+        g.gain.setValueAtTime(0.001, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        o.start(); o.stop(ctx.currentTime + 0.6);
+      } catch(e) {}
+    }
+
+    // ============ RENDER ============
+    function renderStats() {
+      const c = counts();
+      const cards = [
+        { label: "Faturamento hoje", value: fmt(faturamento()), color: "from-primary to-rose-500", emoji: "💰", big: true },
+        { label: "Ticket médio",     value: fmt(ticketMedio()), color: "from-fuchsia-400 to-purple-500", emoji: "📊" },
+        { label: "Novos",            value: c.novo || 0,        color: "from-rose-400 to-pink-500",     emoji: "🔔" },
+        { label: "Em Preparo",       value: c.preparo || 0,     color: "from-amber-400 to-orange-500",  emoji: "👩‍🍳" },
+        { label: "Entregues",        value: c.entregue || 0,    color: "from-emerald-400 to-teal-500",  emoji: "✅" }
+      ];
+      document.getElementById("stats").innerHTML = cards.map(s => `
+        <div class="rounded-2xl p-4 text-white bg-gradient-to-br ${s.color} shadow-md ${s.big ? 'col-span-2 md:col-span-1' : ''}">
+          <div class="flex items-center justify-between">
+            <span class="text-2xl">${s.emoji}</span>
+            <span class="${typeof s.value === 'string' && s.value.length > 8 ? 'text-xl' : 'text-3xl'} font-extrabold">${s.value}</span>
+          </div>
+          <p class="mt-2 text-sm font-medium opacity-95">${s.label}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderTabs() {
+      const c = counts();
+      document.getElementById("tabs").innerHTML = tabs.map(t => {
+        const active = filter === t.key;
+        return `
+          <button onclick="setFilter('${t.key}')"
+            class="snap-start whitespace-nowrap px-4 py-2 rounded-full border text-sm font-bold transition ${
+              active ? "bg-primary text-white border-primary shadow"
+                     : "bg-white text-gray-700 border-gray-200 hover:border-primary/50"
+            }">
+            <span class="mr-1">${t.emoji}</span>${t.label}
+            <span class="ml-2 px-2 py-0.5 rounded-full text-xs ${active ? "bg-white/25" : "bg-gray-100"}">${c[t.key] || 0}</span>
+          </button>`;
+      }).join("");
+    }
+
+    function renderOrders() {
+      const search = (document.getElementById("search")?.value || "").toLowerCase().trim();
+      let visible = filter === "todos" ? orders : orders.filter(o => o.status === filter);
+      if (search) visible = visible.filter(o => o.cliente.toLowerCase().includes(search) || o.id.toLowerCase().includes(search));
+
+      const root = document.getElementById("orders");
+      if (!visible.length) {
+        root.innerHTML = `
+          <div class="col-span-full bg-white rounded-2xl p-12 text-center border border-dashed border-gray-200">
+            <div class="text-5xl mb-3">🍰</div>
+            <p class="text-gray-500 font-medium">Nenhum pedido encontrado</p>
+          </div>`;
+        return;
+      }
+      root.innerHTML = visible.map(o => {
+        const cfg = statusConfig[o.status];
+        return `
+          <article class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col transition hover:shadow-lg ${
+            o.status === 'novo' ? 'border-primary/40 ring-2 ring-primary/20 animate-slide' : 'border-gray-100'
+          }">
+            <div class="px-5 pt-4 pb-3 flex items-start justify-between gap-2">
+              <div>
+                <p class="text-xs text-gray-400 font-medium">Pedido</p>
+                <h3 class="font-extrabold text-lg text-gray-800">${o.id}</h3>
+              </div>
+              <span class="text-xs font-bold px-3 py-1 rounded-full border ${cfg.chip}">${cfg.label}</span>
+            </div>
+
+            <div class="px-5 pb-3 border-b border-gray-100">
+              <p class="font-bold text-gray-800">${o.cliente}</p>
+              <p class="text-xs text-gray-500">${o.telefone} • ${o.hora}</p>
+              <div class="flex items-center gap-2 mt-2">
+                <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-md ${
+                  o.tipo === 'delivery' ? 'bg-orange-100 text-orange-700' : 'bg-pink-100 text-pink-700'
+                }">${o.tipo === 'delivery' ? '🛵 DoceDelivery' : '🍰 Retirada'}</span>
+              </div>
+              ${o.endereco ? `<p class="text-xs text-gray-500 mt-2">📍 ${o.endereco}</p>` : ''}
+            </div>
+
+            <div class="px-5 py-3 flex-1">
+              <ul class="space-y-2">
+                ${o.itens.map(it => `
+                  <li class="flex justify-between text-sm">
+                    <span class="text-gray-700"><span class="font-bold text-primary">${it.qtd}x</span> ${it.nome}</span>
+                    <span class="text-gray-500 font-medium">${fmt(it.qtd * it.preco)}</span>
+                  </li>`).join("")}
+              </ul>
+              ${o.observacao ? `
+                <div class="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-800">
+                  <strong>Obs:</strong> ${o.observacao}
+                </div>` : ''}
+            </div>
+
+            <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+              <div>
+                <p class="text-[10px] text-gray-400 uppercase font-bold">Total</p>
+                <p class="font-extrabold text-lg text-gray-800">${fmt(total(o))}</p>
+              </div>
+              <p class="text-xs text-gray-500 text-right">${o.pagamento}</p>
+            </div>
+
+            <div class="px-5 pb-5 pt-2 flex gap-2 flex-wrap">
+              ${cfg.next
+                ? `<button onclick="advance('${o.id}')" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl shadow hover:opacity-90 active:scale-[0.98] transition">${cfg.nextLabel}</button>`
+                : `<button disabled class="flex-1 bg-gray-100 text-gray-400 font-bold py-3 rounded-xl cursor-not-allowed">Concluído</button>`}
+              ${o.status === 'novo'
+                ? `<button onclick="reject('${o.id}')" class="px-4 rounded-xl border border-gray-200 text-gray-500 hover:text-rose-600 hover:border-rose-300 transition" title="Recusar">✕</button>`
+                : ''}
+              <button onclick="imprimir('${o.id}')" class="px-4 rounded-xl border border-gray-200 text-gray-500 hover:text-primary hover:border-primary/40 transition" title="Imprimir">🖨️</button>
+            </div>
+          </article>`;
+      }).join("");
+    }
+
+    function renderStoreStatus() {
+      const status = document.getElementById("store-status");
+      const btn = document.getElementById("btn-toggle-store");
+      const banner = document.getElementById("closed-banner");
+      if (storeOpen) {
+        status.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span><span>Loja Aberta</span>`;
+        btn.textContent = "Fechar Loja";
+        btn.className = "bg-white text-primary font-bold px-4 py-2 rounded-xl shadow hover:opacity-90 transition";
+        banner.classList.add("hidden");
+      } else {
+        status.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-400"></span><span>Loja Fechada</span>`;
+        btn.textContent = "Abrir Loja";
+        btn.className = "bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl shadow hover:opacity-90 transition";
+        banner.classList.remove("hidden");
+      }
+    }
+
+    function renderAll() { renderStats(); renderTabs(); renderOrders(); renderStoreStatus(); }
+
+    // ============ AÇÕES ============
+    function setFilter(k) { filter = k; renderAll(); }
+    function advance(id) {
+      orders = orders.map(o => {
+        if (o.id !== id) return o;
+        const next = statusConfig[o.status].next;
+        return next ? { ...o, status: next } : o;
+      });
+      renderAll();
+    }
+    function reject(id) {
+      if (confirm("Recusar este pedido?")) {
+        orders = orders.filter(o => o.id !== id);
+        renderAll();
+      }
+    }
+    function toggleStore() {
+      if (storeOpen && !confirm("Tem certeza que deseja fechar a loja? Você não receberá novos pedidos.")) return;
+      storeOpen = !storeOpen;
+      renderStoreStatus();
+    }
+    function imprimir(id) {
+      const o = orders.find(x => x.id === id);
+      if (!o) return;
+      const w = window.open("", "_blank", "width=380,height=600");
+      w.document.write(`
+        <pre style="font-family:monospace;padding:16px;font-size:12px">
+====== DOCE ENCANTO ======
+Pedido: ${o.id}
+Cliente: ${o.cliente}
+Tel: ${o.telefone}
+${o.endereco ? 'End: ' + o.endereco + '\\n' : ''}Tipo: ${o.tipo}
+Pagamento: ${o.pagamento}
+--------------------------
+${o.itens.map(i => `${i.qtd}x ${i.nome} ${fmt(i.qtd*i.preco)}`).join("\\n")}
+--------------------------
+TOTAL: ${fmt(total(o))}
+${o.observacao ? '\\nObs: ' + o.observacao : ''}
+==========================
+        </pre>`);
+      w.document.close();
+      setTimeout(() => w.print(), 200);
+    }
+    function simulateNewOrder() {
+      if (!storeOpen) { alert("A loja está fechada. Abra a loja para receber novos pedidos."); return; }
+      const exemplos = [
+        { cliente: "Ana Souza", tipo: "delivery", endereco: "Rua Lavanda, 88", itens: [{ nome: "Torta de Morango", qtd: 1, preco: 18 }] },
+        { cliente: "Pedro Lima", tipo: "retirada", itens: [{ nome: "Donuts de Avelã", qtd: 3, preco: 12.9 }] },
+        { cliente: "Júlia Reis", tipo: "delivery", endereco: "Av. Paulista, 900", itens: [{ nome: "Cupcake de Oreo", qtd: 2, preco: 9.5 }, { nome: "Bolo Floresta Negra (fatia)", qtd: 1, preco: 14 }] }
+      ];
+      const e = exemplos[Math.floor(Math.random() * exemplos.length)];
+      const now = new Date();
+      orders.unshift({
+        id: "#" + (nextId++), cliente: e.cliente, telefone: "(15) 99000-0000",
+        tipo: e.tipo, endereco: e.endereco, pagamento: "Pix",
+        hora: now.toTimeString().slice(0,5), status: "novo", itens: e.itens
+      });
+      playBeep();
+      renderAll();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
