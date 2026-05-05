@@ -8,13 +8,13 @@
     "description": "Cardápio Digital Doce Encanto - Delícias que Encantam seu Paladar!",
     "icons":[
         {
-            "src": "assets/images/logopwa.png",
+            "src": "assets/imgs/logopwa.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
         },
         {
-             "src": "assets/images/logopwa512.png",
+             "src": "assets/imgs/logopwa512.png",
              "sizes": "512x512",
              "type": "image/png",
              "purpose": "any"
