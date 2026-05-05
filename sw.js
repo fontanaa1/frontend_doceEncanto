@@ -2,7 +2,6 @@ const CACHE_NAME = 'doceria-cache-v8';
 const ASSETS = [
     './',
     './index.html',
-    './aula12.html',
     './manifest.json',
     './assets/imgs/doceEncanto.png',
     './assets/imgs/logopwa.png',
