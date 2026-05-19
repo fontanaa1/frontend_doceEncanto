@@ -39,14 +39,20 @@
     <div class="relative z-10 max-w-6xl mx-auto px-6 py-6 flex items-center justify-between flex-wrap gap-3">
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-2xl shadow-lg">
-          <img  class="w-full h-full object-cover rounded-full" src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/doce_encantoo.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvZG9jZV9lbmNhbnRvby5wbmciLCJpYXQiOjE3Nzc5ODkxMTgsImV4cCI6MTgwOTUyNTExOH0.Zmb8rtc1ntMVVihFil3QvQeTTc1UPYKelGAkPVeGV20" alt="logo">
+          <img class="w-full h-full object-cover rounded-full" src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/doce_encantoo.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvZG9jZV9lbmNhbnRvby5wbmciLCJpYXQiOjE3Nzc5ODkxMTgsImV4cCI6MTgwOTUyNTExOH0.Zmb8rtc1ntMVVihFil3QvQeTTc1UPYKelGAkPVeGV20" alt="logo">
         </div>
         <div>
           <h1 class="font-chellin text-3xl text-white drop-shadow">Doce Encanto</h1>
           <p class="text-white/90 text-xs sm:text-sm">Painel de Pedidos</p>
         </div>
       </div>
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <!-- STATUS DE CONEXÃO COM A API -->
+        <div id="status-conexao" class="hidden sm:flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm border border-white/30">
+          <span class="w-2 h-2 rounded-full bg-yellow-400 pulse-dot"></span>
+          <span>Conectando...</span>
+        </div>
+        <!-- STATUS DA LOJA -->
         <div id="store-status" class="hidden sm:flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm border border-white/30">
           <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
           <span>Loja Aberta</span>
@@ -73,9 +79,10 @@
         <input id="sound-toggle" type="checkbox" checked class="accent-primary w-4 h-4">
         <span class="font-semibold">🔔 Som de novos pedidos</span>
       </label>
-      <button onclick="simulateNewOrder()" class="bg-secondary text-white font-bold px-4 py-3 rounded-xl shadow hover:opacity-90 transition text-sm">
-        + Simular pedido
-      </button>
+      <!-- Contador de pedidos -->
+      <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-bold text-gray-600">
+        📋 <span id="contador-pedidos">0 pedido(s)</span>
+      </div>
     </div>
 
     <!-- TABS -->
@@ -90,44 +97,26 @@
   </footer>
 
   <script>
-    // ============ ESTADO ============
-    let orders = [
-      { id: "#1042", cliente: "Mariana Silva", telefone: "(15) 99876-1234",
-        tipo: "delivery", endereco: "Rua das Flores, 250 - Centro",
-        pagamento: "Pix", hora: "14:32", status: "novo",
-        itens: [
-          { nome: "Donuts de Avelã", qtd: 2, preco: 12.9 },
-          { nome: "Cupcake de Oreo", qtd: 1, preco: 9.5 }
-        ],
-        observacao: "Sem cobertura extra, por favor 💕" },
-      { id: "#1041", cliente: "João Pereira", telefone: "(15) 99888-2211",
-        tipo: "retirada", pagamento: "Cartão na retirada", hora: "14:18", status: "preparo",
-        itens: [
-          { nome: "Bolo Floresta Negra (fatia)", qtd: 3, preco: 14.0 },
-          { nome: "Torta de Morango", qtd: 1, preco: 18.0 }
-        ] },
-      { id: "#1040", cliente: "Beatriz Andrade", telefone: "(15) 99700-1010",
-        tipo: "delivery", endereco: "Av. Brasil, 1200 - Apto 32",
-        pagamento: "Dinheiro - Troco p/ R$ 100", hora: "13:55", status: "pronto",
-        itens: [{ nome: "Donuts de Avelã", qtd: 6, preco: 12.9 }] },
-      { id: "#1039", cliente: "Carlos Eduardo", telefone: "(15) 99654-7777",
-        tipo: "retirada", pagamento: "Pix", hora: "13:30", status: "entregue",
-        itens: [{ nome: "Cupcake de Oreo", qtd: 4, preco: 9.5 }] }
-    ];
+    // ============ CONFIG ============
+    const URL_API = 'https://aula-7-doceria.vercel.app/api/pedidos';
 
+    // ============ ESTADO ============
+    let orders = [];
     let storeOpen = true;
-    let nextId = 1043;
+    let previousOrderIds = new Set();
 
     const statusConfig = {
-      novo:     { label: "Novo Pedido", chip: "bg-rose-100 text-rose-700 border-rose-300",       next: "preparo",  nextLabel: "Aceitar e Preparar" },
-      preparo:  { label: "Em Preparo",  chip: "bg-amber-100 text-amber-700 border-amber-300",    next: "pronto",   nextLabel: "Marcar como Pronto" },
+      novo:     { label: "Novo Pedido", chip: "bg-rose-100 text-rose-700 border-rose-300",          next: "preparo",  nextLabel: "Aceitar e Preparar" },
+      preparo:  { label: "Em Preparo",  chip: "bg-amber-100 text-amber-700 border-amber-300",       next: "pronto",   nextLabel: "Marcar como Pronto" },
       pronto:   { label: "Pronto",      chip: "bg-emerald-100 text-emerald-700 border-emerald-300", next: "entregue", nextLabel: "Finalizar Pedido" },
-      entregue: { label: "Entregue",    chip: "bg-gray-100 text-gray-600 border-gray-300" }
+      entregue: { label: "Entregue",    chip: "bg-gray-100 text-gray-600 border-gray-300" },
+      pendente: { label: "Pendente",    chip: "bg-rose-100 text-rose-700 border-rose-300",          next: "preparo",  nextLabel: "Aceitar e Preparar" }
     };
 
     const tabs = [
       { key: "todos",    label: "Todos",      emoji: "📋" },
       { key: "novo",     label: "Novos",      emoji: "🔔" },
+      { key: "pendente", label: "Pendentes",  emoji: "⏳" },
       { key: "preparo",  label: "Em Preparo", emoji: "👩‍🍳" },
       { key: "pronto",   label: "Prontos",    emoji: "✅" },
       { key: "entregue", label: "Entregues",  emoji: "📦" }
@@ -136,20 +125,32 @@
     let filter = "todos";
 
     // ============ HELPERS ============
-    const total = (o) => o.itens.reduce((s, i) => s + i.qtd * i.preco, 0);
-    const fmt = (v) => v.toLocaleString("pt-br", { style: "currency", currency: "BRL" });
+    const total = (o) => {
+      if (o.total) return parseFloat(o.total);
+      if (!o.itens || !Array.isArray(o.itens)) return 0;
+      return o.itens.reduce((s, i) => s + (i.qtd || i.quantidade || 1) * (i.preco || 0), 0);
+    };
+    const fmt = (v) => parseFloat(v || 0).toLocaleString("pt-br", { style: "currency", currency: "BRL" });
+
     const counts = () => {
       const c = { todos: orders.length };
-      orders.forEach(o => c[o.status] = (c[o.status] || 0) + 1);
+      orders.forEach(o => {
+        const s = (o.status || 'pendente').toLowerCase();
+        c[s] = (c[s] || 0) + 1;
+      });
       return c;
     };
-    const faturamento = () => orders.filter(o => o.status === "entregue").reduce((s, o) => s + total(o), 0);
+
+    const faturamento = () => orders
+      .filter(o => (o.status || '').toLowerCase() === "entregue")
+      .reduce((s, o) => s + total(o), 0);
+
     const ticketMedio = () => {
-      const entregues = orders.filter(o => o.status === "entregue");
+      const entregues = orders.filter(o => (o.status || '').toLowerCase() === "entregue");
       return entregues.length ? faturamento() / entregues.length : 0;
     };
 
-    // Som via WebAudio (sem precisar de arquivo)
+    // Som via WebAudio
     function playBeep() {
       if (!document.getElementById("sound-toggle").checked) return;
       try {
@@ -164,15 +165,131 @@
       } catch(e) {}
     }
 
+    // ============ API ============
+    async function carregarPedidos() {
+      const statusConexaoEl = document.getElementById('status-conexao');
+      const contadorEl = document.getElementById('contador-pedidos');
+
+      // Indicador: atualizando
+      statusConexaoEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-yellow-400 pulse-dot"></span><span>Atualizando...</span>';
+      statusConexaoEl.className = 'hidden sm:flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm border border-white/30';
+
+      try {
+        const resposta = await fetch(URL_API);
+        if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+
+        const pedidos = await resposta.json();
+
+        // Normaliza os dados vindos da API
+        const pedidosNormalizados = pedidos.map(p => {
+          let itens = [];
+          try {
+            itens = typeof p.itens === 'string' ? JSON.parse(p.itens) : (p.itens || []);
+          } catch(e) { itens = []; }
+
+          return {
+            id: `#${p.id}`,
+            _id_raw: p.id,
+            cliente: p.cliente_nome || p.cliente || 'Não informado',
+            telefone: p.cliente_telefone || p.telefone || '',
+            tipo: p.tipo || 'delivery',
+            endereco: p.cliente_endereco || p.endereco || '',
+            pagamento: p.pagamento || 'Não informado',
+            hora: p.created_at
+              ? new Date(p.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+              : '--:--',
+            status: (p.status || 'pendente').toLowerCase(),
+            itens: itens,
+            total_raw: p.total,
+            observacao: p.observacao || ''
+          };
+        });
+
+        // Detecta novos pedidos para tocar o som
+        const novosIds = new Set(pedidosNormalizados.map(p => p.id));
+        const haNovosPedidos = pedidosNormalizados.some(p => !previousOrderIds.has(p.id));
+        if (previousOrderIds.size > 0 && haNovosPedidos) {
+          playBeep();
+        }
+        previousOrderIds = novosIds;
+
+        orders = pedidosNormalizados;
+        contadorEl.textContent = `${orders.length} pedido(s)`;
+
+        // Status: online
+        setTimeout(() => {
+          statusConexaoEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span><span>Online</span>';
+        }, 500);
+
+        renderAll();
+
+      } catch (erro) {
+        console.error("Erro ao carregar pedidos:", erro);
+
+        // Status: offline
+        statusConexaoEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-400"></span><span>Offline</span>';
+
+        document.getElementById("orders").innerHTML = `
+          <div class="col-span-full bg-red-50 border border-red-300 text-red-700 px-6 py-8 rounded-2xl text-center">
+            <div class="text-4xl mb-3">⚠️</div>
+            <strong class="block font-bold text-lg mb-1">Não foi possível carregar os pedidos</strong>
+            <span class="text-sm">Verifique a conexão com a API: <code class="bg-red-100 px-2 py-0.5 rounded">${URL_API}</code></span>
+          </div>`;
+      }
+    }
+
+    // Avança status via API (PATCH/PUT) ou só localmente se não houver rota
+    async function advance(id) {
+      const order = orders.find(o => o.id === id);
+      if (!order) return;
+
+      const cfg = statusConfig[order.status];
+      if (!cfg || !cfg.next) return;
+
+      const novoStatus = cfg.next;
+
+      // Tenta atualizar na API
+      try {
+        await fetch(`${URL_API}/${order._id_raw}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: novoStatus })
+        });
+      } catch(e) {
+        // Se não tiver rota PATCH, atualiza só localmente
+        console.warn("PATCH não disponível, atualizando localmente:", e);
+      }
+
+      // Atualiza localmente de qualquer forma para UX imediata
+      orders = orders.map(o => o.id === id ? { ...o, status: novoStatus } : o);
+      renderAll();
+    }
+
+    async function reject(id) {
+      if (!confirm("Recusar este pedido?")) return;
+      const order = orders.find(o => o.id === id);
+
+      try {
+        await fetch(`${URL_API}/${order._id_raw}`, {
+          method: 'DELETE'
+        });
+      } catch(e) {
+        console.warn("DELETE não disponível, removendo localmente:", e);
+      }
+
+      orders = orders.filter(o => o.id !== id);
+      renderAll();
+    }
+
     // ============ RENDER ============
     function renderStats() {
       const c = counts();
       const cards = [
-        { label: "Faturamento hoje", value: fmt(faturamento()), color: "from-primary to-rose-500", emoji: "💰", big: true },
-        { label: "Ticket médio",     value: fmt(ticketMedio()), color: "from-fuchsia-400 to-purple-500", emoji: "📊" },
-        { label: "Novos",            value: c.novo || 0,        color: "from-rose-400 to-pink-500",     emoji: "🔔" },
-        { label: "Em Preparo",       value: c.preparo || 0,     color: "from-amber-400 to-orange-500",  emoji: "👩‍🍳" },
-        { label: "Entregues",        value: c.entregue || 0,    color: "from-emerald-400 to-teal-500",  emoji: "✅" }
+        { label: "Faturamento hoje", value: fmt(faturamento()),  color: "from-primary to-rose-500",      emoji: "💰", big: true },
+        { label: "Ticket médio",     value: fmt(ticketMedio()),  color: "from-fuchsia-400 to-purple-500", emoji: "📊" },
+        { label: "Novos/Pendentes",  value: (c.novo || 0) + (c.pendente || 0), color: "from-rose-400 to-pink-500", emoji: "🔔" },
+        { label: "Em Preparo",       value: c.preparo || 0,      color: "from-amber-400 to-orange-500",   emoji: "👩‍🍳" },
+        { label: "Entregues",        value: c.entregue || 0,     color: "from-emerald-400 to-teal-500",   emoji: "✅" }
       ];
       document.getElementById("stats").innerHTML = cards.map(s => `
         <div class="rounded-2xl p-4 text-white bg-gradient-to-br ${s.color} shadow-md ${s.big ? 'col-span-2 md:col-span-1' : ''}">
@@ -187,7 +304,10 @@
 
     function renderTabs() {
       const c = counts();
-      document.getElementById("tabs").innerHTML = tabs.map(t => {
+      // Filtra tabs que não têm pedidos (exceto "todos") para não poluir
+      const tabsVisiveis = tabs.filter(t => t.key === 'todos' || (c[t.key] || 0) > 0);
+
+      document.getElementById("tabs").innerHTML = tabsVisiveis.map(t => {
         const active = filter === t.key;
         return `
           <button onclick="setFilter('${t.key}')"
@@ -204,22 +324,37 @@
     function renderOrders() {
       const search = (document.getElementById("search")?.value || "").toLowerCase().trim();
       let visible = filter === "todos" ? orders : orders.filter(o => o.status === filter);
-      if (search) visible = visible.filter(o => o.cliente.toLowerCase().includes(search) || o.id.toLowerCase().includes(search));
+      if (search) visible = visible.filter(o =>
+        o.cliente.toLowerCase().includes(search) || o.id.toLowerCase().includes(search)
+      );
 
       const root = document.getElementById("orders");
+
       if (!visible.length) {
         root.innerHTML = `
           <div class="col-span-full bg-white rounded-2xl p-12 text-center border border-dashed border-gray-200">
             <div class="text-5xl mb-3">🍰</div>
             <p class="text-gray-500 font-medium">Nenhum pedido encontrado</p>
+            <p class="text-gray-400 text-sm mt-1">A cozinha está livre por enquanto!</p>
           </div>`;
         return;
       }
+
       root.innerHTML = visible.map(o => {
-        const cfg = statusConfig[o.status];
+        const cfg = statusConfig[o.status] || statusConfig['pendente'];
+        const totalPedido = o.total_raw ? parseFloat(o.total_raw) : total(o);
+
+        const itensHtml = (o.itens && o.itens.length)
+          ? o.itens.map(it => `
+              <li class="flex justify-between text-sm">
+                <span class="text-gray-700"><span class="font-bold text-primary">${it.qtd || it.quantidade || 1}x</span> ${it.nome || it.produto || 'Item'}</span>
+                <span class="text-gray-500 font-medium">${fmt((it.qtd || it.quantidade || 1) * (it.preco || 0))}</span>
+              </li>`).join("")
+          : `<li class="text-sm text-gray-400 italic">Itens não detalhados</li>`;
+
         return `
           <article class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col transition hover:shadow-lg ${
-            o.status === 'novo' ? 'border-primary/40 ring-2 ring-primary/20 animate-slide' : 'border-gray-100'
+            (o.status === 'novo' || o.status === 'pendente') ? 'border-primary/40 ring-2 ring-primary/20 animate-slide' : 'border-gray-100'
           }">
             <div class="px-5 pt-4 pb-3 flex items-start justify-between gap-2">
               <div>
@@ -231,7 +366,7 @@
 
             <div class="px-5 pb-3 border-b border-gray-100">
               <p class="font-bold text-gray-800">${o.cliente}</p>
-              <p class="text-xs text-gray-500">${o.telefone} • ${o.hora}</p>
+              <p class="text-xs text-gray-500">${o.telefone ? o.telefone + ' • ' : ''}${o.hora}</p>
               <div class="flex items-center gap-2 mt-2">
                 <span class="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-md ${
                   o.tipo === 'delivery' ? 'bg-orange-100 text-orange-700' : 'bg-pink-100 text-pink-700'
@@ -241,13 +376,7 @@
             </div>
 
             <div class="px-5 py-3 flex-1">
-              <ul class="space-y-2">
-                ${o.itens.map(it => `
-                  <li class="flex justify-between text-sm">
-                    <span class="text-gray-700"><span class="font-bold text-primary">${it.qtd}x</span> ${it.nome}</span>
-                    <span class="text-gray-500 font-medium">${fmt(it.qtd * it.preco)}</span>
-                  </li>`).join("")}
-              </ul>
+              <ul class="space-y-2">${itensHtml}</ul>
               ${o.observacao ? `
                 <div class="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-800">
                   <strong>Obs:</strong> ${o.observacao}
@@ -257,7 +386,7 @@
             <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
               <div>
                 <p class="text-[10px] text-gray-400 uppercase font-bold">Total</p>
-                <p class="font-extrabold text-lg text-gray-800">${fmt(total(o))}</p>
+                <p class="font-extrabold text-lg text-gray-800">${fmt(totalPedido)}</p>
               </div>
               <p class="text-xs text-gray-500 text-right">${o.pagamento}</p>
             </div>
@@ -265,8 +394,8 @@
             <div class="px-5 pb-5 pt-2 flex gap-2 flex-wrap">
               ${cfg.next
                 ? `<button onclick="advance('${o.id}')" class="flex-1 bg-primary text-white font-bold py-3 rounded-xl shadow hover:opacity-90 active:scale-[0.98] transition">${cfg.nextLabel}</button>`
-                : `<button disabled class="flex-1 bg-gray-100 text-gray-400 font-bold py-3 rounded-xl cursor-not-allowed">Concluído</button>`}
-              ${o.status === 'novo'
+                : `<button disabled class="flex-1 bg-gray-100 text-gray-400 font-bold py-3 rounded-xl cursor-not-allowed">Concluído ✓</button>`}
+              ${(o.status === 'novo' || o.status === 'pendente')
                 ? `<button onclick="reject('${o.id}')" class="px-4 rounded-xl border border-gray-200 text-gray-500 hover:text-rose-600 hover:border-rose-300 transition" title="Recusar">✕</button>`
                 : ''}
               <button onclick="imprimir('${o.id}')" class="px-4 rounded-xl border border-gray-200 text-gray-500 hover:text-primary hover:border-primary/40 transition" title="Imprimir">🖨️</button>
@@ -296,66 +425,40 @@
 
     // ============ AÇÕES ============
     function setFilter(k) { filter = k; renderAll(); }
-    function advance(id) {
-      orders = orders.map(o => {
-        if (o.id !== id) return o;
-        const next = statusConfig[o.status].next;
-        return next ? { ...o, status: next } : o;
-      });
-      renderAll();
-    }
-    function reject(id) {
-      if (confirm("Recusar este pedido?")) {
-        orders = orders.filter(o => o.id !== id);
-        renderAll();
-      }
-    }
+
     function toggleStore() {
       if (storeOpen && !confirm("Tem certeza que deseja fechar a loja? Você não receberá novos pedidos.")) return;
       storeOpen = !storeOpen;
       renderStoreStatus();
     }
+
     function imprimir(id) {
       const o = orders.find(x => x.id === id);
       if (!o) return;
+      const totalPedido = o.total_raw ? parseFloat(o.total_raw) : total(o);
       const w = window.open("", "_blank", "width=380,height=600");
       w.document.write(`
         <pre style="font-family:monospace;padding:16px;font-size:12px">
 ====== DOCE ENCANTO ======
 Pedido: ${o.id}
 Cliente: ${o.cliente}
-Tel: ${o.telefone}
-${o.endereco ? 'End: ' + o.endereco + '\\n' : ''}Tipo: ${o.tipo}
+${o.telefone ? 'Tel: ' + o.telefone + '\\n' : ''}${o.endereco ? 'End: ' + o.endereco + '\\n' : ''}Tipo: ${o.tipo}
 Pagamento: ${o.pagamento}
 --------------------------
-${o.itens.map(i => `${i.qtd}x ${i.nome} ${fmt(i.qtd*i.preco)}`).join("\\n")}
+${(o.itens || []).map(i => `${i.qtd||i.quantidade||1}x ${i.nome||i.produto||'Item'} ${fmt((i.qtd||i.quantidade||1)*(i.preco||0))}`).join("\\n")}
 --------------------------
-TOTAL: ${fmt(total(o))}
+TOTAL: ${fmt(totalPedido)}
 ${o.observacao ? '\\nObs: ' + o.observacao : ''}
 ==========================
         </pre>`);
       w.document.close();
       setTimeout(() => w.print(), 200);
     }
-    function simulateNewOrder() {
-      if (!storeOpen) { alert("A loja está fechada. Abra a loja para receber novos pedidos."); return; }
-      const exemplos = [
-        { cliente: "Ana Souza", tipo: "delivery", endereco: "Rua Lavanda, 88", itens: [{ nome: "Torta de Morango", qtd: 1, preco: 18 }] },
-        { cliente: "Pedro Lima", tipo: "retirada", itens: [{ nome: "Donuts de Avelã", qtd: 3, preco: 12.9 }] },
-        { cliente: "Júlia Reis", tipo: "delivery", endereco: "Av. Paulista, 900", itens: [{ nome: "Cupcake de Oreo", qtd: 2, preco: 9.5 }, { nome: "Bolo Floresta Negra (fatia)", qtd: 1, preco: 14 }] }
-      ];
-      const e = exemplos[Math.floor(Math.random() * exemplos.length)];
-      const now = new Date();
-      orders.unshift({
-        id: "#" + (nextId++), cliente: e.cliente, telefone: "(15) 99000-0000",
-        tipo: e.tipo, endereco: e.endereco, pagamento: "Pix",
-        hora: now.toTimeString().slice(0,5), status: "novo", itens: e.itens
-      });
-      playBeep();
-      renderAll();
-    }
 
-    renderAll();
+    // ============ INICIALIZAÇÃO ============
+    // Carrega pedidos imediatamente e atualiza a cada 10 segundos
+    carregarPedidos();
+    setInterval(carregarPedidos, 10000);
   </script>
 </body>
 </html>
