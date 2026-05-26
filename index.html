@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link href="https://fonts.cdnfonts.com/css/chellin" rel="stylesheet">
-    <link rel="icon" type="image/png" href="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logopwa512.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nb3B3YTUxMi5wbmciLCJpYXQiOjE3Nzc5OTAyMDYsImV4cCI6MTgwOTUyNjIwNn0.54Z8sOJaKkvFLbGZCLfW48KOYXNJ78kmcs_SHDrG640" >
+    <link rel="icon" type="image/png" href="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logopwa512.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nb3B3YTUxMi5wbmciLCJpYXQiOjE3Nzc5OTAyMDYsImV4cCI6MTgwOTUyNjIwNn0.54Z8sOJaKkvFLbGZCLfW48KOYXNJ78kmcs_SHDrG640">
     <meta name="theme-color" content="#ea92a5">
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -22,6 +22,84 @@
     <link rel="shortcut icon" href="./images/logo64.png" type="image/x-icon">
     <meta name="msapplication-TileImage" content="./images/logo64.png">
     <meta property="og:image" content="./images/logo64.png">
+
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        .animate-fade-slide-up {
+            animation: fadeSlideUp 0.6s ease-out forwards;
+        }
+        .animate-bounce-slow {
+            animation: bounce 2s ease-in-out infinite;
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s ease-in-out infinite;
+        }
+        .btn-cta {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            box-shadow: 0 4px 20px rgba(251, 146, 60, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(251, 146, 60, 0.6);
+        }
+        input:focus {
+            box-shadow: 0 0 0 3px rgba(234, 146, 165, 0.2);
+            outline: none;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fef3c7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ea92a5;
+            border-radius: 9999px;
+        }
+        #toast {
+            transition: all 0.3s ease;
+        }
+        .produto-card {
+            transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+        }
+        .produto-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+        }
+        .profile-dropdown {
+            transition: all 0.2s ease;
+        }
+        .profile-dropdown-item {
+            transition: background 0.2s ease;
+        }
+        .profile-dropdown-item:hover {
+            background: #fef3c7;
+        }
+        .modal-profile {
+            animation: fadeSlideUp 0.3s ease-out;
+        }
+    </style>
+
     <script>
         tailwind.config = {
             theme: {
@@ -39,61 +117,292 @@
     </script>
 </head>
 
-<body class="bg-orange-50">
+<body class="bg-orange-50 min-h-screen">
 
-    <!-- HEADER -->
-    <header class="relative h-[300px] sm:h-[400px] w-full overflow-hidden flex flex-col justify-between p-4 bg-black">
+    <!-- ===================================== -->
+    <!-- SPLASH SCREEN / LOGIN -->
+    <!-- ===================================== -->
+    <div id="splash-screen" class="min-h-screen flex flex-col bg-[#FFFDF9]">
 
-        <div class="absolute inset-0 z-0">
-            <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/Doceria.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvRG9jZXJpYS5wbmciLCJpYXQiOjE3NzU4MzExMjIsImV4cCI6MTgwNzM2NzEyMn0.4R1gFaLZcW7D9Thm88iGQjUSFoj2dlSZg0tWtCM2YL0" alt="Background Doces" class="w-full h-full object-cover opacity-60">
-            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-        </div>
+        <!-- Header com Logo e Navegação -->
+        <header class="max-w-7xl mx-auto w-full px-6 pt-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logopwa512.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nb3B3YTUxMi5wbmciLCJpYXQiOjE3Nzc5OTAyMDYsImV4cCI6MTgwOTUyNjIwNn0.54Z8sOJaKkvFLbGZCLfW48KOYXNJ78kmcs_SHDrG640"
+                    alt="Logo Doce Encanto" class="w-12 h-12 object-contain">
+            </div>
+            <nav>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('cardapio-section')?.scrollIntoView({behavior:'smooth'})"
+                    class="text-gray-600 hover:text-primary font-bold transition text-sm uppercase tracking-wide">
+                    CARDÁPIO
+                </a>
+            </nav>
+        </header>
 
-        <div class="relative z-10 flex items-center justify-between w-full max-w-6xl mx-auto">
-            <button id="btn-mobile" class="text-white p-2 focus:outline-none">
-                <svg id="icon-open" class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <svg id="icon-close" class="hidden w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path d="M6 6l12 12M6 18L18 6" />
-                </svg>
-            </button>
-
-            <button class="bg-[#ffbc0d] hover:bg-[#e6a800] text-black font-bold py-2 px-6 rounded-md transition-colors text-sm sm:text-base">
-                Entrar
-            </button>
-        </div>
-
-        <div class="relative z-10 text-center mb-6">
-            <h1 class="text-white text-2xl sm:text-4xl font-extrabold mb-6 px-4">
-                Como você quer seu doce hoje?
-            </h1>
-
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
-                <button class="flex items-center justify-center gap-3 bg-white w-full sm:w-56 py-3 rounded-xl shadow-lg hover:bg-gray-100 transition-all transform active:scale-95">
-                    <span class="text-2xl">🍰</span>
-                    <span class="font-bold text-gray-800">Peça e Retire</span>
-                </button>
-                <button class="flex items-center justify-center gap-3 bg-white w-full sm:w-56 py-3 rounded-xl shadow-lg hover:bg-gray-100 transition-all transform active:scale-95">
-                    <span class="text-2xl">🛵</span>
-                    <span class="font-bold text-gray-800">DoceDelivery</span>
-                </button>
+        <!-- Fileira Decorativa de Cupcakes -->
+        <div class="w-full overflow-hidden py-4 mt-4">
+            <div class="flex justify-center items-center gap-4 md:gap-8 flex-wrap">
+                <div class="text-4xl animate-float">🧁</div>
+                <div class="text-5xl animate-bounce-slow" style="animation-delay: 0.2s">🍰</div>
+                <div class="text-4xl animate-float" style="animation-delay: 0.5s">🍩</div>
+                <div class="text-5xl animate-bounce-slow" style="animation-delay: 0.7s">🍪</div>
+                <div class="text-4xl animate-float" style="animation-delay: 1s">🎂</div>
+                <div class="text-5xl animate-bounce-slow" style="animation-delay: 1.2s">🍫</div>
+                <div class="text-4xl animate-float" style="animation-delay: 1.5s">🥧</div>
             </div>
         </div>
 
-    </header>
+        <!-- Hero Section com Layout Lado a Lado -->
+        <div class="max-w-7xl mx-auto px-6 py-8 md:py-12 flex-1">
+            <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                
+                <!-- Coluna Esquerda: Logo Animada -->
+                <div class="w-full md:w-1/2">
+                    <div class="flex justify-center items-center">
+                        <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logopwa512.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nb3B3YTUxMi5wbmciLCJpYXQiOjE3Nzk0NjI3NTcsImV4cCI6MTgxMDk5ODc1N30.jFPUz_PafN1cgE2Cre3d2Z88Tu3RIS7u5hLtfAFND0s" 
+                             alt="Logo Doce Encanto" 
+                             class="w-64 h-64 md:w-80 md:h-80 object-contain animate-float">
+                    </div>
+                </div>
+                
+                <!-- Coluna Direita: Texto e CTA -->
+                <div class="w-full md:w-1/2 text-center md:text-left">
+                    <h1 class="text-5xl md:text-6xl lg:text-7xl font-chellin text-primary mb-4 leading-tight">
+                        Os melhores<br>doces da cidade
+                    </h1>
+                    
+                    <p class="text-gray-500 text-base md:text-lg mb-6 leading-relaxed">
+                        🍫 Brigadeiros Gourmet • 🎂 Bolos Artesanais • 🧁 Cupcakes Especiais • 🥧 Tortas Cremosas • 🍪 Cookies Americanos
+                    </p>
+                    
+                    <p class="text-gray-400 text-sm mb-8 max-w-md mx-auto md:mx-0">
+                        Feitos com ingredientes selecionados e muito amor. Delicie-se com nossos doces que encantam paladares!
+                    </p>
+                    
+                    <button onclick="entrarComoVisitante()" 
+                            class="btn-cta text-white px-8 py-4 rounded-2xl font-bold text-lg uppercase tracking-wide transition-all">
+                        🍰 VER CARDÁPIO
+                    </button>
+                    
+                    <div class="mt-6 flex gap-4 justify-center md:justify-start">
+                        <button onclick="mostrarLogin()" class="text-primary hover:text-pink-600 font-semibold text-sm transition">
+                            Já tenho conta
+                        </button>
+                        <span class="text-gray-300">|</span>
+                        <button onclick="mostrarCadastro()" class="text-primary hover:text-pink-600 font-semibold text-sm transition">
+                            Criar conta grátis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Decoração de fundo -->
+        <div class="fixed bottom-0 left-0 w-64 h-64 bg-pink-200 rounded-full blur-3xl opacity-30 pointer-events-none -z-10"></div>
+        <div class="fixed top-1/3 right-0 w-80 h-80 bg-orange-200 rounded-full blur-3xl opacity-30 pointer-events-none -z-10"></div>
+    </div>
 
-    <!-- MENU MOBILE -->
-    <nav id="menu-mobile" class="hidden bg-white px-6 py-4 shadow-md">
-        <a href="#cardapio" class="block font-bold hover:text-primary transition">Cardápio</a>
-    </nav>
+    <!-- ===================================== -->
+    <!-- MODAL LOGIN -->
+    <!-- ===================================== -->
+    <div id="modal-login" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000] hidden justify-center items-center p-4" onclick="if(event.target===this)fecharLogin()">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-chellin text-3xl text-primary">Entrar</h2>
+                <button onclick="fecharLogin()" class="bg-gray-100 hover:bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-xl">×</button>
+            </div>
+            <form onsubmit="fazerLogin(event)" class="space-y-5">
+                <div>
+                    <label class="text-gray-600 text-sm font-semibold block mb-1.5">Email</label>
+                    <input type="email" id="login-email" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="text-gray-600 text-sm font-semibold block mb-1.5">Senha</label>
+                    <input type="password" id="login-senha" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-pink-500 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">Entrar 🍰</button>
+            </form>
+            <p class="text-center text-gray-400 text-sm mt-5">
+                Não tem conta? 
+                <button onclick="fecharLogin(); mostrarCadastro()" class="text-primary font-bold">Cadastre-se</button>
+            </p>
+        </div>
+    </div>
 
-    <!-- BANNER -->
-    <section class="p-6 text-center mt-8">
-        <h2 class="text-5xl font-chellin text-primary">Os melhores doces da cidade</h2>
-        <p class="mt-3 text-gray-600">Feitos com carinho e muito chocolate - Doce Encanto ❤️</p>
+    <!-- ===================================== -->
+    <!-- MODAL CADASTRO -->
+    <!-- ===================================== -->
+    <div id="modal-cadastro" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000] hidden justify-center items-center p-4" onclick="if(event.target===this)fecharCadastro()">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-chellin text-3xl text-primary">Criar Conta</h2>
+                <button onclick="fecharCadastro()" class="bg-gray-100 hover:bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-xl">×</button>
+            </div>
+            <form onsubmit="fazerCadastro(event)" class="space-y-4">
+                <input type="text" id="cadastro-nome" placeholder="Nome completo" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                <input type="email" id="cadastro-email" placeholder="Email" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                <input type="tel" id="cadastro-telefone" placeholder="Telefone" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                <input type="password" id="cadastro-senha" placeholder="Senha (mínimo 6 caracteres)" required minlength="6" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                <input type="password" id="cadastro-confirmar" placeholder="Confirmar senha" required minlength="6" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" id="cadastro-termos" class="w-4 h-4 text-primary rounded">
+                    <span class="text-xs text-gray-500">Aceito os <a href="#" class="text-primary">Termos de Uso</a></span>
+                </label>
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-pink-500 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">Criar Conta ✨</button>
+            </form>
+            <p class="text-center text-gray-400 text-sm mt-5">
+                Já tem conta? 
+                <button onclick="fecharCadastro(); mostrarLogin()" class="text-primary font-bold">Entrar</button>
+            </p>
+        </div>
+    </div>
 
-        <section class="max-w-6xl mx-auto px-4 mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <!-- ===================================== -->
+    <!-- MODAL PERFIL (Melhorado) -->
+    <!-- ===================================== -->
+    <div id="modal-perfil" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000] hidden justify-center items-center p-4" onclick="if(event.target===this)fecharModalPerfil()">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl modal-profile">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-chellin text-3xl text-primary">Meu Perfil</h2>
+                <button onclick="fecharModalPerfil()" class="bg-gray-100 hover:bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-xl">×</button>
+            </div>
+            
+            <div class="flex flex-col items-center mb-6">
+                <div class="w-24 h-24 bg-gradient-to-br from-primary to-pink-400 rounded-full flex items-center justify-center shadow-lg mb-3 animate-pulse-slow">
+                    <span class="text-4xl">🍰</span>
+                </div>
+                <h3 id="perfil-nome" class="text-xl font-bold text-gray-800">Usuário</h3>
+                <p id="perfil-email" class="text-gray-500 text-sm">email@exemplo.com</p>
+                <p id="perfil-telefone" class="text-gray-400 text-xs mt-1">Telefone não cadastrado</p>
+            </div>
+
+            <div class="space-y-3 border-t pt-4">
+                <div class="flex justify-between items-center py-2 border-b">
+                    <span class="text-gray-600">Membro desde</span>
+                    <span id="perfil-data" class="text-gray-800 font-semibold">--/--/----</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b">
+                    <span class="text-gray-600">Total de pedidos</span>
+                    <span id="perfil-pedidos" class="text-primary font-bold text-lg">0</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b">
+                    <span class="text-gray-600">Último acesso</span>
+                    <span id="perfil-ultimo" class="text-gray-500 text-sm">--:-- --/--/----</span>
+                </div>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <button onclick="editarPerfil()" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-xl font-bold hover:bg-gray-200 transition">
+                    ✏️ Editar
+                </button>
+                <button onclick="fecharModalPerfil(); fazerLogout()" class="flex-1 bg-red-500 text-white py-2 rounded-xl font-bold hover:bg-red-600 transition">
+                    🚪 Sair
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================== -->
+    <!-- MODAL EDITAR PERFIL -->
+    <!-- ===================================== -->
+    <div id="modal-editar-perfil" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000] hidden justify-center items-center p-4" onclick="if(event.target===this)fecharModalEditar()">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-chellin text-3xl text-primary">Editar Perfil</h2>
+                <button onclick="fecharModalEditar()" class="bg-gray-100 hover:bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-xl">×</button>
+            </div>
+            <form onsubmit="salvarEdicaoPerfil(event)" class="space-y-4">
+                <div>
+                    <label class="text-gray-600 text-sm font-semibold block mb-1.5">Nome</label>
+                    <input type="text" id="editar-nome" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition">
+                </div>
+                <div>
+                    <label class="text-gray-600 text-sm font-semibold block mb-1.5">Telefone</label>
+                    <input type="tel" id="editar-telefone" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition" placeholder="(11) 99999-9999">
+                </div>
+                <div>
+                    <label class="text-gray-600 text-sm font-semibold block mb-1.5">Nova Senha</label>
+                    <input type="password" id="editar-senha" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:border-primary transition" placeholder="Deixe em branco para manter">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-pink-500 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all">Salvar Alterações 💾</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================================== -->
+    <!-- APP PRINCIPAL (CONTEÚDO ORIGINAL) -->
+    <!-- ===================================== -->
+    <div id="app-screen" class="hidden">
+
+        <!-- HEADER ORIGINAL COM LOGO ANIMADA - CORRIGIDO -->
+        <header class="relative h-[350px] sm:h-[450px] w-full overflow-hidden flex flex-col justify-between p-4 bg-black">
+            <div class="absolute inset-0 z-0">
+                <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/Doceria.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvRG9jZXJpYS5wbmciLCJpYXQiOjE3NzU4MzExMjIsImV4cCI6MTgwNzM2NzEyMn0.4R1gFaLZcW7D9Thm88iGQjUSFoj2dlSZg0tWtCM2YL0" alt="Background Doces" class="w-full h-full object-cover opacity-60">
+                <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+            </div>
+
+            <div class="relative z-10 flex items-center justify-between w-full max-w-6xl mx-auto">
+                <button id="btn-mobile" class="text-white p-2 focus:outline-none">
+                    <svg id="icon-open" class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg id="icon-close" class="hidden w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M6 6l12 12M6 18L18 6" />
+                    </svg>
+                </button>
+
+                <!-- Logo animada no header principal -->
+                <div class="flex items-center gap-3">
+                    <button onclick="abrirModalCarrinho()" class="relative bg-white/20 hover:bg-white/30 text-white p-2 rounded-md transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 6M17 13l1.5 6M9 21h6M12 21v-8"></path>
+                        </svg>
+                        <span id="cart-badge-original" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                    
+                    <button id="user-menu-btn-original" class="bg-white/20 hover:bg-white/30 text-white p-2 rounded-md transition flex items-center gap-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span id="user-name-header" class="text-sm hidden sm:inline">Perfil</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative z-10 text-center mt-auto mb-8">
+                <!-- Logo animada grande no centro do header -->
+                <div class="flex justify-center mb-4">
+                    <img src="https://uztnzygcxltywvculwau.supabase.co/storage/v1/object/sign/images/logopwa512.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNWVmYmU3Ny0xODllLTQ5ZDMtODg0Ny1mNzJlODFjYjI0NjQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJpbWFnZXMvbG9nb3B3YTUxMi5wbmciLCJpYXQiOjE3Nzc5OTAyMDYsImV4cCI6MTgwOTUyNjIwNn0.54Z8sOJaKkvFLbGZCLfW48KOYXNJ78kmcs_SHDrG640"
+                         alt="Logo Doce Encanto" 
+                         class="w-20 h-20 object-contain animate-float">
+                </div>
+                <h1 class="text-white text-2xl sm:text-4xl font-extrabold mb-6 px-4">
+                    Como você quer seu doce hoje?
+                </h1>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center px-4 mb-4">
+                    <button class="flex items-center justify-center gap-3 bg-white w-full sm:w-56 py-3 rounded-xl shadow-lg hover:bg-gray-100 transition-all transform active:scale-95">
+                        <span class="text-2xl">🍰</span>
+                        <span class="font-bold text-gray-800">Peça e Retire</span>
+                    </button>
+                    <button class="flex items-center justify-center gap-3 bg-white w-full sm:w-56 py-3 rounded-xl shadow-lg hover:bg-gray-100 transition-all transform active:scale-95">
+                        <span class="text-2xl">🛵</span>
+                        <span class="font-bold text-gray-800">DoceDelivery</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MENU MOBILE -->
+        <nav id="menu-mobile" class="hidden bg-white px-6 py-4 shadow-md">
+            <a href="#cardapio" class="block font-bold hover:text-primary transition">Cardápio</a>
+        </nav>
+
+        <!-- BANNER -->
+        <section class="p-6 text-center mt-8">
+            <h2 class="text-5xl font-chellin text-primary">Os melhores doces da cidade</h2>
+            <p class="mt-3 text-gray-600">Feitos com carinho e muito chocolate - Doce Encanto ❤️</p>
+        </section>
+
+        <section id="cardapio-section" class="max-w-6xl mx-auto px-4 mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div class="rounded-lg overflow-hidden shadow-md transform hover:scale-105 transition-transform duration-300">
                 <img src="https://png.pngtree.com/png-clipart/20240607/original/pngtree-fresh-assorted-homemade-gourmet-glazed-donuts-png-image_15264389.png"
                     alt="Delicioso Donuts" class="w-full h-64 object-cover">
@@ -127,147 +436,356 @@
                 </div>
             </div>
         </section>
-    </section>
 
-    <!-- CARDÁPIO -->
-    <section id="cardapio" class="px-6 mt-10 max-w-4xl mx-auto">
-
-        <h2 class="text-2xl font-bold text-center mb-6">Cardápio</h2>
-
-        <!-- BOTÕES CATEGORIA — gerados pela API -->
-        <div id="nav-categorias" class="flex gap-2 overflow-x-auto whitespace-nowrap pb-2 snap-x">
-            <!-- Skeleton de carregamento -->
-            <div class="animate-pulse flex gap-2">
-                <div class="h-9 w-20 bg-gray-200 rounded-full"></div>
-                <div class="h-9 w-24 bg-gray-200 rounded-full"></div>
-                <div class="h-9 w-28 bg-gray-200 rounded-full"></div>
-                <div class="h-9 w-20 bg-gray-200 rounded-full"></div>
-                <div class="h-9 w-16 bg-gray-200 rounded-full"></div>
-            </div>
-        </div>
-
-        <!-- TÍTULO DA CATEGORIA ATIVA -->
-        <div id="categoria-titulo" class="text-left font-extrabold text-[22px] mt-8 mb-4"></div>
-
-        <!-- GRID DE PRODUTOS — gerado pela API -->
-        <div id="lista-produtos" class="grid grid-cols-2 gap-4">
-            <!-- Skeleton de carregamento -->
-            <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
-            <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
-            <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
-            <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
-        </div>
-
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-primary text-white text-center p-6 mt-16">
-        <p>📍 Rua Kopenhagen, 123 - São Paulo</p>
-        <p>📞 (15) 98108-9666</p>
-        <p>📸 @doce_encanto</p>
-    </footer>
-
-    <!-- MODAL DE DETALHES DO PRODUTO -->
-    <div id="detalhes-modal"
-        class="fixed inset-0 bg-black/70 z-[80] flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300 px-4">
-        <div id="detalhes-modal-content"
-            class="bg-white w-full max-w-[400px] rounded-[30px] overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col">
-
-            <button onclick="fecharModalDetalhes()"
-                class="absolute top-4 right-4 bg-white/80 backdrop-blur-md text-gray-800 w-10 h-10 rounded-full flex justify-center items-center font-bold text-2xl shadow-sm z-10 hover:text-primary active:scale-90 transition-all">&times;</button>
-
-            <div class="w-full h-[260px] bg-gray-50 flex justify-center items-center p-8 relative">
-                <div class="absolute inset-0 bg-gradient-to-b from-pink-50 to-white opacity-60"></div>
-                <img id="detalhes-img" src="" alt="Produto"
-                    class="w-full h-full object-contain drop-shadow-xl relative z-10 transition-transform duration-500 hover:scale-105">
-            </div>
-
-            <div class="p-6">
-                <h2 id="detalhes-nome" class="text-2xl font-black mb-1 leading-tight tracking-tight">Nome</h2>
-                <p id="detalhes-preco" class="text-2xl font-black text-primary mb-4">R$ 0,00</p>
-                <div class="bg-gray-50 rounded-xl p-4 mb-6">
-                    <p id="detalhes-desc" class="text-gray-600 text-sm leading-relaxed font-medium">Descrição...</p>
+        <!-- CARDÁPIO -->
+        <section id="cardapio" class="px-6 mt-10 max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-center mb-6">Cardápio</h2>
+            <div id="nav-categorias" class="flex gap-2 overflow-x-auto whitespace-nowrap pb-2 snap-x">
+                <div class="animate-pulse flex gap-2">
+                    <div class="h-9 w-20 bg-gray-200 rounded-full"></div>
+                    <div class="h-9 w-24 bg-gray-200 rounded-full"></div>
+                    <div class="h-9 w-28 bg-gray-200 rounded-full"></div>
+                    <div class="h-9 w-20 bg-gray-200 rounded-full"></div>
+                    <div class="h-9 w-16 bg-gray-200 rounded-full"></div>
                 </div>
-                <button id="detalhes-btn-add"
-                    class="w-full bg-primary text-white py-4 rounded-xl text-[17px] font-extrabold shadow-lg hover:opacity-80 active:scale-[0.98] transition-all outline-none flex justify-center items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Adicionar ao Pedido
-                </button>
             </div>
-        </div>
-    </div>
-
-    <!-- RODAPÉ CARRINHO FIXO -->
-    <div id="carrinho-footer"
-        class="fixed bottom-0 left-0 w-full bg-primary text-white p-4 z-50 shadow-[0_-4px_6px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 flex justify-between items-center cursor-pointer"
-        onclick="abrirModalCarrinho()">
-        <div>
-            <p class="text-sm font-medium">Resumo do Pedido</p>
-            <p class="text-xl font-bold">Total: <span id="carrinho-total">R$ 0,00</span></p>
-        </div>
-        <button class="bg-white text-primary px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition-all">
-            Ver Carrinho
-        </button>
-    </div>
-
-    <!-- MODAL DO CARRINHO -->
-    <div id="carrinho-modal"
-        class="fixed inset-0 bg-black/60 z-[60] flex flex-col justify-end sm:justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300">
-        <div id="carrinho-modal-content"
-            class="bg-white w-full sm:w-[500px] h-[85vh] sm:h-auto sm:max-h-[85vh] rounded-t-3xl sm:rounded-2xl flex flex-col transform translate-y-full sm:translate-y-0 sm:scale-95 transition-transform duration-300">
-
-            <div class="p-5 border-b flex justify-between items-center">
-                <h2 class="text-2xl font-bold">Seu Carrinho 🛒</h2>
-                <button onclick="fecharModalCarrinho()"
-                    class="text-3xl font-bold text-gray-400 hover:text-gray-700 focus:outline-none">&times;</button>
+            <div id="categoria-titulo" class="text-left font-extrabold text-[22px] mt-8 mb-4"></div>
+            <div id="lista-produtos" class="grid grid-cols-2 gap-4">
+                <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
+                <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
+                <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
+                <div class="animate-pulse bg-white rounded-[20px] p-3 h-52"></div>
             </div>
+        </section>
 
-            <div id="carrinho-itens-container" class="p-5 flex-1 overflow-y-auto flex flex-col gap-4"></div>
+        <!-- FOOTER -->
+        <footer class="bg-primary text-white text-center p-6 mt-16">
+            <p>📍 Rua Kopenhagen, 123 - São Paulo</p>
+            <p>📞 (15) 98108-9666</p>
+            <p>📸 @doce_encanto</p>
+        </footer>
 
-            <div class="p-5 border-t bg-gray-50 rounded-b-3xl sm:rounded-b-2xl">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-lg font-bold">Total do Pedido:</span>
-                    <span id="modal-carrinho-total" class="text-2xl font-black text-primary">R$ 0,00</span>
+        <!-- MODAL DETALHES ORIGINAL -->
+        <div id="detalhes-modal" class="fixed inset-0 bg-black/70 z-[80] flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300 px-4">
+            <div id="detalhes-modal-content" class="bg-white w-full max-w-[400px] rounded-[30px] overflow-hidden transform scale-95 transition-transform duration-300 relative flex flex-col">
+                <button onclick="fecharModalDetalhes()" class="absolute top-4 right-4 bg-white/80 backdrop-blur-md text-gray-800 w-10 h-10 rounded-full flex justify-center items-center font-bold text-2xl shadow-sm z-10 hover:text-primary active:scale-90 transition-all">&times;</button>
+                <div class="w-full h-[260px] bg-gray-50 flex justify-center items-center p-8 relative">
+                    <div class="absolute inset-0 bg-gradient-to-b from-pink-50 to-white opacity-60"></div>
+                    <img id="detalhes-img" src="" alt="Produto" class="w-full h-full object-contain drop-shadow-xl relative z-10 transition-transform duration-500 hover:scale-105">
                 </div>
-                <button onclick="fecharPedido()" id="btn-fechar-pedido"
-                    class="w-full bg-primary text-white py-3 rounded-xl text-lg font-bold shadow-lg hover:opacity-80 active:scale-95 transition-all">
-                    Fechar Pedido (Usar GPS)
-                </button>
+                <div class="p-6">
+                    <h2 id="detalhes-nome" class="text-2xl font-black mb-1 leading-tight tracking-tight">Nome</h2>
+                    <p id="detalhes-preco" class="text-2xl font-black text-primary mb-4">R$ 0,00</p>
+                    <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                        <p id="detalhes-desc" class="text-gray-600 text-sm leading-relaxed font-medium">Descrição...</p>
+                    </div>
+                    <button id="detalhes-btn-add" class="w-full bg-primary text-white py-4 rounded-xl text-[17px] font-extrabold shadow-lg hover:opacity-80 active:scale-[0.98] transition-all outline-none flex justify-center items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Adicionar ao Pedido
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RODAPÉ CARRINHO FIXO ORIGINAL -->
+        <div id="carrinho-footer" class="fixed bottom-0 left-0 w-full bg-primary text-white p-4 z-50 shadow-[0_-4px_6px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 flex justify-between items-center cursor-pointer" onclick="abrirModalCarrinho()">
+            <div>
+                <p class="text-sm font-medium">Resumo do Pedido</p>
+                <p class="text-xl font-bold">Total: <span id="carrinho-total">R$ 0,00</span></p>
+            </div>
+            <button class="bg-white text-primary px-4 py-2 rounded-lg font-bold shadow-md active:scale-95 transition-all">Ver Carrinho</button>
+        </div>
+
+        <!-- MODAL CARRINHO ORIGINAL -->
+        <div id="carrinho-modal" class="fixed inset-0 bg-black/60 z-[60] flex flex-col justify-end sm:justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300">
+            <div id="carrinho-modal-content" class="bg-white w-full sm:w-[500px] h-[85vh] sm:h-auto sm:max-h-[85vh] rounded-t-3xl sm:rounded-2xl flex flex-col transform translate-y-full sm:translate-y-0 sm:scale-95 transition-transform duration-300">
+                <div class="p-5 border-b flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">Seu Carrinho 🛒</h2>
+                    <button onclick="fecharModalCarrinho()" class="text-3xl font-bold text-gray-400 hover:text-gray-700 focus:outline-none">&times;</button>
+                </div>
+                <div id="carrinho-itens-container" class="p-5 flex-1 overflow-y-auto flex flex-col gap-4"></div>
+                <div class="p-5 border-t bg-gray-50 rounded-b-3xl sm:rounded-b-2xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-lg font-bold">Total do Pedido:</span>
+                        <span id="modal-carrinho-total" class="text-2xl font-black text-primary">R$ 0,00</span>
+                    </div>
+                    <input type="text" id="cliente-nome" placeholder="Seu Nome Completo" class="w-full mb-3 p-3 border border-gray-300 rounded-lg outline-none focus:border-primary">
+                    <input type="text" id="cliente-endereco" placeholder="Endereço de Entrega (Rua, Número, Bairro)" class="w-full mb-4 p-3 border border-gray-300 rounded-lg outline-none focus:border-primary">
+                    <button onclick="fecharPedido()" id="btn-fechar-pedido" class="w-full bg-primary text-white py-3 rounded-xl text-lg font-bold shadow-lg hover:opacity-80 active:scale-95 transition-all">Fechar Pedido</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-lg transition-all duration-300 opacity-0 translate-y-4 pointer-events-none"></div>
+
     <script>
+        // =====================================
+        // TOAST
+        // =====================================
+        function mostrarToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 2500);
+        }
 
-        // =============================================================
+        // =====================================
+        // AUTH SYSTEM
+        // =====================================
+        const splashScreen = document.getElementById('splash-screen');
+        const appScreen = document.getElementById('app-screen');
+        let usuarioLogado = localStorage.getItem('doce_encanto_user');
+        let usuarioData = null;
+
+        // Carregar dados do usuário logado
+        function carregarDadosUsuario() {
+            if (usuarioLogado) {
+                usuarioData = JSON.parse(usuarioLogado);
+                const userNameSpan = document.getElementById('user-name-header');
+                if (userNameSpan) userNameSpan.innerText = usuarioData.nome?.split(' ')[0] || 'Perfil';
+                
+                // Carregar perfil completo
+                const users = JSON.parse(localStorage.getItem('doce_encanto_users') || '[]');
+                const userCompleto = users.find(u => u.email === usuarioData.email);
+                if (userCompleto) {
+                    const perfilNome = document.getElementById('perfil-nome');
+                    const perfilEmail = document.getElementById('perfil-email');
+                    const perfilTelefone = document.getElementById('perfil-telefone');
+                    const perfilPedidos = document.getElementById('perfil-pedidos');
+                    const perfilData = document.getElementById('perfil-data');
+                    const perfilUltimo = document.getElementById('perfil-ultimo');
+                    const editarNome = document.getElementById('editar-nome');
+                    const editarTelefone = document.getElementById('editar-telefone');
+                    
+                    if (perfilNome) perfilNome.innerText = userCompleto.nome;
+                    if (perfilEmail) perfilEmail.innerText = userCompleto.email;
+                    if (perfilTelefone) perfilTelefone.innerText = userCompleto.telefone || 'Telefone não cadastrado';
+                    if (perfilPedidos) perfilPedidos.innerText = userCompleto.pedidos || 0;
+                    if (perfilData) perfilData.innerText = userCompleto.dataCadastro || new Date().toLocaleDateString();
+                    if (perfilUltimo) perfilUltimo.innerText = userCompleto.ultimoAcesso || new Date().toLocaleString();
+                    
+                    if (editarNome) editarNome.value = userCompleto.nome;
+                    if (editarTelefone) editarTelefone.value = userCompleto.telefone || '';
+                }
+            }
+        }
+
+        function entrarComoVisitante() {
+            if (splashScreen) splashScreen.classList.add('hidden');
+            if (appScreen) appScreen.classList.remove('hidden');
+            mostrarToast('🎉 Bem-vindo ao Doce Encanto!');
+            const userNameHeader = document.getElementById('user-name-header');
+            if (userNameHeader) userNameHeader.innerText = 'Visitante';
+        }
+
+        function mostrarLogin() {
+            const modal = document.getElementById('modal-login');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function fecharLogin() {
+            const modal = document.getElementById('modal-login');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function mostrarCadastro() {
+            const modal = document.getElementById('modal-cadastro');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function fecharCadastro() {
+            const modal = document.getElementById('modal-cadastro');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function fazerLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+            const users = JSON.parse(localStorage.getItem('doce_encanto_users') || '[]');
+            const user = users.find(u => u.email === email && u.senha === senha);
+
+            if (user) {
+                // Atualizar último acesso
+                user.ultimoAcesso = new Date().toLocaleString();
+                localStorage.setItem('doce_encanto_users', JSON.stringify(users));
+                
+                usuarioLogado = JSON.stringify({ nome: user.nome, email: user.email });
+                localStorage.setItem('doce_encanto_user', usuarioLogado);
+                fecharLogin();
+                if (splashScreen) splashScreen.classList.add('hidden');
+                if (appScreen) appScreen.classList.remove('hidden');
+                carregarDadosUsuario();
+                mostrarToast(`🎉 Bem-vindo(a), ${user.nome.split(' ')[0]}!`);
+            } else {
+                mostrarToast('❌ Email ou senha incorretos!');
+            }
+        }
+
+        function fazerCadastro(e) {
+            e.preventDefault();
+            const nome = document.getElementById('cadastro-nome').value;
+            const email = document.getElementById('cadastro-email').value;
+            const telefone = document.getElementById('cadastro-telefone').value;
+            const senha = document.getElementById('cadastro-senha').value;
+            const confirmar = document.getElementById('cadastro-confirmar').value;
+            const termos = document.getElementById('cadastro-termos').checked;
+
+            if (senha !== confirmar) return mostrarToast('❌ As senhas não coincidem!');
+            if (senha.length < 6) return mostrarToast('❌ A senha deve ter no mínimo 6 caracteres!');
+            if (!termos) return mostrarToast('❌ Aceite os termos de uso!');
+
+            const users = JSON.parse(localStorage.getItem('doce_encanto_users') || '[]');
+            if (users.find(u => u.email === email)) return mostrarToast('❌ Este email já está cadastrado!');
+
+            const novoUsuario = { 
+                nome, email, telefone, senha, 
+                pedidos: 0, 
+                dataCadastro: new Date().toLocaleDateString(),
+                ultimoAcesso: new Date().toLocaleString()
+            };
+            users.push(novoUsuario);
+            localStorage.setItem('doce_encanto_users', JSON.stringify(users));
+            usuarioLogado = JSON.stringify({ nome, email });
+            localStorage.setItem('doce_encanto_user', usuarioLogado);
+            fecharCadastro();
+            if (splashScreen) splashScreen.classList.add('hidden');
+            if (appScreen) appScreen.classList.remove('hidden');
+            carregarDadosUsuario();
+            mostrarToast(`✨ Conta criada! Bem-vindo(a), ${nome.split(' ')[0]}!`);
+        }
+
+        // Função de logout melhorada
+        function fazerLogout() {
+            localStorage.removeItem('doce_encanto_user');
+            localStorage.removeItem('doce_encanto_carrinho');
+            usuarioLogado = null;
+            usuarioData = null;
+            if (appScreen) appScreen.classList.add('hidden');
+            if (splashScreen) splashScreen.classList.remove('hidden');
+            mostrarToast('👋 Até logo!');
+        }
+
+        // Função para mostrar modal de perfil
+        function mostrarPerfil() {
+            carregarDadosUsuario();
+            const modal = document.getElementById('modal-perfil');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function fecharModalPerfil() {
+            const modal = document.getElementById('modal-perfil');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function editarPerfil() {
+            fecharModalPerfil();
+            const modal = document.getElementById('modal-editar-perfil');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function fecharModalEditar() {
+            const modal = document.getElementById('modal-editar-perfil');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function salvarEdicaoPerfil(e) {
+            e.preventDefault();
+            const novoNome = document.getElementById('editar-nome').value;
+            const novoTelefone = document.getElementById('editar-telefone').value;
+            const novaSenha = document.getElementById('editar-senha').value;
+
+            const users = JSON.parse(localStorage.getItem('doce_encanto_users') || '[]');
+            const userIndex = users.findIndex(u => u.email === usuarioData.email);
+            
+            if (userIndex !== -1) {
+                users[userIndex].nome = novoNome;
+                users[userIndex].telefone = novoTelefone;
+                if (novaSenha) users[userIndex].senha = novaSenha;
+                localStorage.setItem('doce_encanto_users', JSON.stringify(users));
+                
+                usuarioLogado = JSON.stringify({ nome: novoNome, email: usuarioData.email });
+                localStorage.setItem('doce_encanto_user', usuarioLogado);
+                usuarioData = JSON.parse(usuarioLogado);
+                
+                carregarDadosUsuario();
+                fecharModalEditar();
+                mostrarToast('✅ Perfil atualizado com sucesso!');
+            }
+        }
+
+        // Event listeners do perfil
+        const userMenuBtn = document.getElementById('user-menu-btn-original');
+        if (userMenuBtn) {
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (usuarioLogado) {
+                    mostrarPerfil();
+                } else {
+                    mostrarLogin();
+                }
+            });
+        }
+
+        // Verificar se usuário já está logado
+        if (usuarioLogado) {
+            if (splashScreen) splashScreen.classList.add('hidden');
+            if (appScreen) appScreen.classList.remove('hidden');
+            carregarDadosUsuario();
+        }
+
+        // =====================================
         // CONFIGURAÇÃO DA API
-        // =============================================================
+        // =====================================
         const API_URL = 'https://aula-7-doceria.vercel.app/api';
-        // Quando fizer deploy na Vercel, troca para a URL de produção:
-        // const API_URL = 'https://seu-projeto.vercel.app/api';
 
-        // =============================================================
+        // =====================================
         // VARIÁVEIS GLOBAIS
-        // =============================================================
-        const navCategorias   = document.getElementById('nav-categorias');
-        const listaProdutos   = document.getElementById('lista-produtos');
+        // =====================================
+        const navCategorias = document.getElementById('nav-categorias');
+        const listaProdutos = document.getElementById('lista-produtos');
         const categoriaTitulo = document.getElementById('categoria-titulo');
-        let categoriasData    = [];
-        let categoriaAtivaId  = null;
+        let categoriasData = [];
+        let categoriaAtivaId = null;
 
-        // =============================================================
-        // CARREGAR CATEGORIAS DA API
-        // =============================================================
         async function carregarCategorias() {
+            if (!navCategorias) return;
             try {
                 const response = await fetch(`${API_URL}/categorias`);
                 categoriasData = await response.json();
                 renderizarBotoesCategorias();
-
-                // Seleciona a primeira categoria automaticamente
                 if (categoriasData.length > 0) {
                     selecionarCategoria(categoriasData[0].id, categoriasData[0].nome);
                 }
@@ -277,46 +795,22 @@
             }
         }
 
-        // =============================================================
-        // RENDERIZAR BOTÕES DE CATEGORIA
-        // =============================================================
         function renderizarBotoesCategorias() {
+            if (!navCategorias) return;
             navCategorias.innerHTML = '';
-
             categoriasData.forEach(cat => {
                 const btn = document.createElement('button');
                 btn.className = 'btn-cat snap-start px-4 py-2 rounded-full bg-gray-200 text-gray-800 text-sm font-bold flex-shrink-0 transition-all duration-150 cursor-pointer';
                 btn.innerText = cat.nome;
                 btn.dataset.id = cat.id;
                 btn.onclick = () => selecionarCategoria(cat.id, cat.nome);
-
-                // Touch events (mobile)
-                let startX = 0, startY = 0;
-                btn.addEventListener('touchstart', (e) => {
-                    startX = e.touches[0].clientX;
-                    startY = e.touches[0].clientY;
-                    btn.classList.add('scale-95', 'opacity-80');
-                });
-                btn.addEventListener('touchend', (e) => {
-                    btn.classList.remove('scale-95', 'opacity-80');
-                    const dx = Math.abs(e.changedTouches[0].clientX - startX);
-                    const dy = Math.abs(e.changedTouches[0].clientY - startY);
-                    if (dx < 10 && dy < 10) selecionarCategoria(cat.id, cat.nome);
-                });
-                btn.addEventListener('touchcancel', () => btn.classList.remove('scale-95', 'opacity-80'));
-
                 navCategorias.appendChild(btn);
             });
         }
 
-        // =============================================================
-        // SELECIONAR CATEGORIA E CARREGAR PRODUTOS
-        // =============================================================
         function selecionarCategoria(id, nome) {
             categoriaAtivaId = id;
-            categoriaTitulo.innerText = nome;
-
-            // Atualiza estilo dos botões
+            if (categoriaTitulo) categoriaTitulo.innerText = nome;
             document.querySelectorAll('.btn-cat').forEach(btn => {
                 if (parseInt(btn.dataset.id) === id) {
                     btn.classList.add('bg-primary', 'text-white');
@@ -326,21 +820,12 @@
                     btn.classList.add('bg-gray-200', 'text-gray-800');
                 }
             });
-
             carregarProdutos(id);
         }
 
-        // =============================================================
-        // CARREGAR PRODUTOS DA API (filtrados por categoria)
-        // =============================================================
         async function carregarProdutos(categoriaId) {
-            // Skeleton enquanto carrega
-            listaProdutos.innerHTML = `
-                <div class="col-span-2 flex justify-center py-10">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                </div>
-            `;
-
+            if (!listaProdutos) return;
+            listaProdutos.innerHTML = `<div class="col-span-2 flex justify-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>`;
             try {
                 const response = await fetch(`${API_URL}/produtos?categoriaId=${categoriaId}`);
                 const produtos = await response.json();
@@ -351,118 +836,93 @@
             }
         }
 
-        // =============================================================
-        // RENDERIZAR CARDS DE PRODUTO
-        // =============================================================
         function renderizarProdutos(produtos) {
+            if (!listaProdutos) return;
             listaProdutos.innerHTML = '';
-
             if (produtos.length === 0) {
                 listaProdutos.innerHTML = '<p class="col-span-2 text-gray-400 text-sm py-10 text-center">Nenhum produto nesta categoria.</p>';
                 return;
             }
-
             produtos.forEach(p => {
                 const precoFormatado = Number(p.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const imgSrc = p.imagem || './assets/imgs/Doceria.png';
-                const desc   = p.descricao || '';
-
+                const desc = p.descricao || '';
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-[20px] p-3 shadow-sm border border-gray-100 relative flex flex-col hover:shadow-md transition-shadow group';
-
                 card.innerHTML = `
-                    <div class="absolute inset-0 z-0 cursor-pointer"
-                        onclick="abrirModalDetalhes('${p.nome.replace(/'/g, "\\'")}', ${p.preco}, '${desc.replace(/'/g, "\\'")}', '${imgSrc}', ${p.id})">
-                    </div>
-
+                    <div class="absolute inset-0 z-0 cursor-pointer" onclick="abrirModalDetalhes('${p.nome.replace(/'/g, "\\'")}', ${p.preco}, '${desc.replace(/'/g, "\\'")}', '${imgSrc}', ${p.id})"></div>
                     <button class="absolute top-3 right-3 text-gray-300 hover:text-primary transition-colors z-10">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                         </svg>
                     </button>
-
-                    <img src="${imgSrc}" alt="${p.nome}"
-                        class="w-full h-24 object-contain mb-2 mt-2 transition-transform duration-300 drop-shadow-sm group-hover:scale-105 pointer-events-none relative z-10"
-                        onerror="this.src='./assets/imgs/Doceria.png'">
-
+                    <img src="${imgSrc}" alt="${p.nome}" class="w-full h-24 object-contain mb-2 mt-2 transition-transform duration-300 drop-shadow-sm group-hover:scale-105 pointer-events-none relative z-10" onerror="this.src='./assets/imgs/Doceria.png'">
                     <div class="text-left w-full mt-auto relative z-10 pointer-events-none">
                         <h4 class="font-bold text-sm leading-tight">${p.nome}</h4>
                         <p class="text-primary font-black text-lg leading-none mt-1">${precoFormatado}</p>
                     </div>
-
-                    <button onclick="adicionarItem(${p.id}, '${p.nome.replace(/'/g, "\\'")}', ${p.preco})"
-                        class="w-full bg-primary text-white py-2 rounded-xl text-xs font-bold mt-3 shadow-md hover:opacity-80 active:scale-95 transition-all z-10 relative">
-                        Adicionar ao Carrinho
-                    </button>
+                    <button onclick="adicionarItem(${p.id}, '${p.nome.replace(/'/g, "\\'")}', ${p.preco})" class="w-full bg-primary text-white py-2 rounded-xl text-xs font-bold mt-3 shadow-md hover:opacity-80 active:scale-95 transition-all z-10 relative">Adicionar ao Carrinho</button>
                 `;
-
                 listaProdutos.appendChild(card);
             });
         }
 
-        // =============================================================
+        // =====================================
         // MENU HAMBURGER
-        // =============================================================
+        // =====================================
         const btnMobile = document.getElementById('btn-mobile');
         const menuMobile = document.getElementById('menu-mobile');
         const iconOpen = document.getElementById('icon-open');
         const iconClose = document.getElementById('icon-close');
+        if (btnMobile) {
+            btnMobile.addEventListener('click', () => {
+                if (menuMobile) menuMobile.classList.toggle('hidden');
+                if (iconOpen) iconOpen.classList.toggle('hidden');
+                if (iconClose) iconClose.classList.toggle('hidden');
+            });
+        }
 
-        btnMobile.addEventListener('click', () => {
-            menuMobile.classList.toggle('hidden');
-            iconOpen.classList.toggle('hidden');
-            iconClose.classList.toggle('hidden');
-        });
-
-        // =============================================================
-        // MODAL DETALHES DO PRODUTO
-        // =============================================================
+        // =====================================
+        // MODAL DETALHES
+        // =====================================
         const modalDetalhes = document.getElementById('detalhes-modal');
         const modalDetalhesContent = document.getElementById('detalhes-modal-content');
 
-        function abrirModalDetalhes(nome, preco, desc, img, id) {
+        window.abrirModalDetalhes = function(nome, preco, desc, img, id) {
             if (navigator.vibrate) navigator.vibrate(40);
-
             document.getElementById('detalhes-nome').innerText = nome;
-            document.getElementById('detalhes-preco').innerText =
-                Number(preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('detalhes-preco').innerText = Number(preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             document.getElementById('detalhes-desc').innerText = desc || 'Sem descrição disponível.';
             document.getElementById('detalhes-img').src = img;
-
-            document.getElementById('detalhes-btn-add').onclick = function () {
-                adicionarItem(id, nome, preco);
-                fecharModalDetalhes();
-            };
-
+            document.getElementById('detalhes-btn-add').onclick = function() { adicionarItem(id, nome, preco); fecharModalDetalhes(); };
             modalDetalhes.classList.remove('opacity-0', 'pointer-events-none');
             setTimeout(() => {
                 modalDetalhesContent.classList.remove('scale-95');
                 modalDetalhesContent.classList.add('scale-100');
             }, 10);
-        }
+        };
 
-        function fecharModalDetalhes() {
+        window.fecharModalDetalhes = function() {
             modalDetalhesContent.classList.remove('scale-100');
             modalDetalhesContent.classList.add('scale-95');
-            setTimeout(() => {
-                modalDetalhes.classList.add('opacity-0', 'pointer-events-none');
-            }, 300);
+            setTimeout(() => modalDetalhes.classList.add('opacity-0', 'pointer-events-none'), 300);
+        };
+
+        if (modalDetalhes) {
+            modalDetalhes.addEventListener('click', (e) => { if (e.target === modalDetalhes) fecharModalDetalhes(); });
         }
 
-        modalDetalhes.addEventListener('click', (e) => {
-            if (e.target === modalDetalhes) fecharModalDetalhes();
-        });
-
-        // =============================================================
+        // =====================================
         // CARRINHO
-        // =============================================================
+        // =====================================
         let carrinho = [];
-        const carrinhoFooter  = document.getElementById('carrinho-footer');
+        const carrinhoFooter = document.getElementById('carrinho-footer');
         const carrinhoTotalSpan = document.getElementById('carrinho-total');
-        const modal           = document.getElementById('carrinho-modal');
-        const modalContent    = document.getElementById('carrinho-modal-content');
-        const itensContainer  = document.getElementById('carrinho-itens-container');
-        const modalTotalSpan  = document.getElementById('modal-carrinho-total');
+        const modalCarrinho = document.getElementById('carrinho-modal');
+        const modalCarrinhoContent = document.getElementById('carrinho-modal-content');
+        const itensContainer = document.getElementById('carrinho-itens-container');
+        const modalTotalSpan = document.getElementById('modal-carrinho-total');
+        const cartBadgeOriginal = document.getElementById('cart-badge-original');
 
         function inicializarCarrinho() {
             const salvo = localStorage.getItem('doce_encanto_carrinho');
@@ -472,49 +932,45 @@
             }
         }
 
-        function adicionarItem(id, nome, preco) {
+        window.adicionarItem = function(id, nome, preco) {
             if (navigator.vibrate) navigator.vibrate(200);
             const index = carrinho.findIndex(item => item.id === id);
-            if (index !== -1) {
-                carrinho[index].quantidade += 1;
-            } else {
-                carrinho.push({ id, nome, preco: Number(preco), quantidade: 1 });
-            }
+            if (index !== -1) carrinho[index].quantidade += 1;
+            else carrinho.push({ id, nome, preco: Number(preco), quantidade: 1 });
             atualizarCarrinho();
-        }
+            mostrarToast(`🍰 ${nome} adicionado ao carrinho!`);
+        };
 
-        function abrirModalCarrinho() {
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => modalContent.classList.remove('translate-y-full', 'scale-95'), 10);
-        }
+        window.abrirModalCarrinho = function() {
+            if (modalCarrinho) {
+                modalCarrinho.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    if (modalCarrinhoContent) modalCarrinhoContent.classList.remove('translate-y-full', 'scale-95');
+                }, 10);
+            }
+        };
 
-        function fecharModalCarrinho() {
-            modalContent.classList.add('translate-y-full', 'scale-95');
-            setTimeout(() => modal.classList.add('opacity-0', 'pointer-events-none'), 300);
-        }
+        window.fecharModalCarrinho = function() {
+            if (modalCarrinhoContent) modalCarrinhoContent.classList.add('translate-y-full', 'scale-95');
+            setTimeout(() => {
+                if (modalCarrinho) modalCarrinho.classList.add('opacity-0', 'pointer-events-none');
+            }, 300);
+        };
 
-        function aumentarQuantidade(id) {
+        window.aumentarQuantidade = function(id) {
+            const index = carrinho.findIndex(item => item.id === id);
+            if (index !== -1) { carrinho[index].quantidade += 1; atualizarCarrinho(); if (navigator.vibrate) navigator.vibrate(50); }
+        };
+
+        window.diminuirQuantidade = function(id) {
             const index = carrinho.findIndex(item => item.id === id);
             if (index !== -1) {
-                carrinho[index].quantidade += 1;
+                if (carrinho[index].quantidade > 1) carrinho[index].quantidade -= 1;
+                else { carrinho.splice(index, 1); if (carrinho.length === 0) fecharModalCarrinho(); }
                 atualizarCarrinho();
                 if (navigator.vibrate) navigator.vibrate(50);
             }
-        }
-
-        function diminuirQuantidade(id) {
-            const index = carrinho.findIndex(item => item.id === id);
-            if (index !== -1) {
-                if (carrinho[index].quantidade > 1) {
-                    carrinho[index].quantidade -= 1;
-                } else {
-                    carrinho.splice(index, 1);
-                    if (carrinho.length === 0) fecharModalCarrinho();
-                }
-                atualizarCarrinho();
-                if (navigator.vibrate) navigator.vibrate(50);
-            }
-        }
+        };
 
         function atualizarCarrinho() {
             localStorage.setItem('doce_encanto_carrinho', JSON.stringify(carrinho));
@@ -522,26 +978,29 @@
         }
 
         function atualizarInterfaceCart() {
+            const totalQtd = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
+            if (cartBadgeOriginal) {
+                if (totalQtd > 0) { cartBadgeOriginal.innerText = totalQtd; cartBadgeOriginal.classList.remove('hidden'); }
+                else { cartBadgeOriginal.classList.add('hidden'); }
+            }
             if (carrinho.length === 0) {
-                carrinhoFooter.classList.add('translate-y-full');
+                if (carrinhoFooter) carrinhoFooter.classList.add('translate-y-full');
                 return;
             }
             const total = carrinho.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
             const totalFormatado = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            carrinhoTotalSpan.innerText = totalFormatado;
-            modalTotalSpan.innerText = totalFormatado;
-            carrinhoFooter.classList.remove('translate-y-full');
+            if (carrinhoTotalSpan) carrinhoTotalSpan.innerText = totalFormatado;
+            if (modalTotalSpan) modalTotalSpan.innerText = totalFormatado;
+            if (carrinhoFooter) carrinhoFooter.classList.remove('translate-y-full');
             renderizarItensModal();
         }
 
         function renderizarItensModal() {
             if (!itensContainer) return;
             itensContainer.innerHTML = '';
-
             carrinho.forEach(item => {
-                const subTotal  = (item.preco * item.quantidade).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const subTotal = (item.preco * item.quantidade).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 const precoUnit = item.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
                 const divItem = document.createElement('div');
                 divItem.className = 'flex justify-between items-center border-b pb-4 mt-2';
                 divItem.innerHTML = `
@@ -551,68 +1010,91 @@
                         <p class="font-bold text-primary mt-1">${subTotal}</p>
                     </div>
                     <div class="flex items-center gap-3 bg-gray-100 p-2 rounded-xl">
-                        <button onclick="diminuirQuantidade(${item.id})"
-                            class="w-8 h-8 flex justify-center items-center bg-white rounded-lg font-bold text-xl shadow-sm hover:text-primary active:scale-95 transition-all">-</button>
+                        <button onclick="diminuirQuantidade(${item.id})" class="w-8 h-8 flex justify-center items-center bg-white rounded-lg font-bold text-xl shadow-sm hover:text-primary active:scale-95 transition-all">-</button>
                         <span class="font-bold text-lg w-4 text-center">${item.quantidade}</span>
-                        <button onclick="aumentarQuantidade(${item.id})"
-                            class="w-8 h-8 flex justify-center items-center bg-white rounded-lg font-bold text-xl shadow-sm hover:text-primary active:scale-95 transition-all">+</button>
+                        <button onclick="aumentarQuantidade(${item.id})" class="w-8 h-8 flex justify-center items-center bg-white rounded-lg font-bold text-xl shadow-sm hover:text-primary active:scale-95 transition-all">+</button>
                     </div>
                 `;
                 itensContainer.appendChild(divItem);
             });
         }
 
-        function fecharPedido() {
+        async function fecharPedido() {
             if (carrinho.length === 0) {
-                alert('O carrinho está vazio!');
+                alert("Seu carrinho está vazio!");
                 return;
             }
-            const btnPedido = document.getElementById('btn-fechar-pedido');
-            const btnOriginalText = btnPedido.innerText;
-            btnPedido.innerText = 'Buscando localização...';
 
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (posicao) => {
-                        const lat = posicao.coords.latitude;
-                        const lon = posicao.coords.longitude;
-                        btnPedido.innerText = btnOriginalText;
-                        alert(`Pedido fechado! 🎉\nSua localização: ${lat.toFixed(4)}, ${lon.toFixed(4)}\nObrigada pela preferência! ❤️`);
-                        carrinho = [];
-                        fecharModalCarrinho();
-                        atualizarCarrinho();
+            const nome = document.getElementById('cliente-nome').value;
+            const endereco = document.getElementById('cliente-endereco').value;
+
+            if (!nome || !endereco) {
+                alert("Por favor, preencha seu nome e endereço de entrega!");
+                return;
+            }
+
+            const total = carrinho.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+            
+            const payloadPedido = {
+                cliente_nome: nome,
+                cliente_endereco: endereco,
+                itens: carrinho,
+                total: total
+            };
+
+            const btnFechar = document.getElementById('btn-fechar-pedido');
+            if (btnFechar) {
+                btnFechar.innerText = "Enviando...";
+                btnFechar.disabled = true;
+                btnFechar.classList.add("opacity-50");
+            }
+
+            try {
+                const resposta = await fetch(`${API_URL}/pedidos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
                     },
-                    (erro) => {
-                        btnPedido.innerText = btnOriginalText;
-                        console.error(erro);
-                        alert('Não foi possível obter sua localização.');
-                        carrinho = [];
-                        fecharModalCarrinho();
-                        atualizarCarrinho();
-                    }
-                );
-            } else {
-                btnPedido.innerText = btnOriginalText;
-                alert('Navegador sem suporte a GPS.');
+                    body: JSON.stringify(payloadPedido)
+                });
+
+                if (!resposta.ok) throw new Error('Erro ao enviar pedido');
+
+                alert("Pedido enviado com sucesso para a cozinha!");
+                
+                // Limpar tudo
+                const clienteNome = document.getElementById('cliente-nome');
+                const clienteEndereco = document.getElementById('cliente-endereco');
+                if (clienteNome) clienteNome.value = '';
+                if (clienteEndereco) clienteEndereco.value = '';
                 carrinho = [];
-                fecharModalCarrinho();
                 atualizarCarrinho();
+                fecharModalCarrinho();
+            } catch (erro) {
+                console.error(erro);
+                alert("Ops! Ocorreu um problema de conexão. Tente novamente.");
+            } finally {
+                if (btnFechar) {
+                    btnFechar.innerText = "Fechar Pedido";
+                    btnFechar.disabled = false;
+                    btnFechar.classList.remove("opacity-50");
+                }
             }
         }
 
-        // =============================================================
-        // INICIALIZAR
-        // =============================================================
-        inicializarCarrinho();
+        // Inicializar
         carregarCategorias();
+        inicializarCarrinho();
 
-        if('serviceWorker' in navigator) {
+        // Service Worker
+        if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker Registrado no Porto! 🫓', reg))
-                .catch(err => console.error('Erro ao preparar a massa: ', err));
+                .then(reg => console.log('Service Worker Registrado com sucesso!', reg))
+                .catch(err => console.error('Erro ao registrar Service Worker: ', err));
             });
         }
+
     </script>
 
 </body>
